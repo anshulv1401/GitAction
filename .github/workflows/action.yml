@@ -1,9 +1,32 @@
 name: Actions workflow
 on:
   push:
-  pull_request:
-    types: [closed, assigned, opened, reopened]
-jobs :
+    branches:
+      - master
+      - "feature/*" # matches feature/featA, feature/featB, doesn't match feature/feat/a
+      - "feature/**" # matches feature/featA, feature/featB, feature/feat/a
+      - "!feature/featc" # to ignore any branch
+    tags:
+      - v1.*
+    paths:
+      - "**.js"
+      - "!filename.js"
+
+    #branches-ignore:
+    #  - master
+    #  - 'feature/*' # matches feature/featA, feature/featB, doesn't match feature/feat/a
+    #  - 'feature/**' # matches feature/featA, feature/featB, feature/feat/a
+    #tags-ignore: 
+    #paths-ignore:
+    #  - docs/**
+  #schedule:
+  #  -cron: "0/5 * * * *"
+  #  -cron: "* * * * *"
+  #   #mins, hr, day, month, week
+  #push:
+  #pull_request:
+  #  types: [closed, assigned, opened, reopened]
+jobs:
   run-github-actions:
     runs-on: ubuntu-latest
     steps:
@@ -15,8 +38,8 @@ jobs :
           echo $GITHUB_REPOSITORY
           echo $GITHUB_WORKSPACE
           echo "${{ github.token }}"
-          # git clone git@github:GITHUB_REPOSITORY
-          # git checkout $GITHUB_SHA
+        # git clone git@github:GITHUB_REPOSITORY
+        # git checkout $GITHUB_SHA
       - name: checkout
         uses: actions/checkout@v1
       - name: list files after checkout
